@@ -24,7 +24,7 @@ export default {
   email: null,
   hireable: null,
   bio: "Hi, my name is Ronald, I'm programmer and designer. I'm consultant developer at ThoughtWorks, I'm always willing to learn new things and collaborate in projects",
-  twitter_username: null,
+  twitter_username: "rparias",
   public_repos: 85,
   public_gists: 2,
   followers: 5,
