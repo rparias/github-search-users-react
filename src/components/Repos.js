@@ -1,27 +1,27 @@
 import React from "react";
 import styled from "styled-components";
 import { GithubContext } from "../context/context";
-import { ExampleChart, Pie3D, Column3D, Bar3D, Doughnut2D } from "./Charts";
+import { Pie3D, Column3D, Bar3D, Doughnut2D } from "./Charts";
 
 const Repos = () => {
   const { repos } = React.useContext(GithubContext);
 
-  const { mostUsedLanguages, mostPopularLanguages } =
-    getMostPopularLanguages(repos);
+  const { mostUsedLanguages, mostPopularLanguages, stars, forks } =
+    getReposStatistics(repos);
 
   return (
     <section className="section">
       <Wrapper className="section-center">
         <Pie3D data={mostUsedLanguages} />
-        <Column3D data={mostPopularLanguages} />
+        <Column3D data={stars} />
         <Doughnut2D data={mostPopularLanguages} />
-        <Bar3D data={mostUsedLanguages} />
+        <Bar3D data={forks} />
       </Wrapper>
     </section>
   );
 };
 
-const getMostPopularLanguages = (repos) => {
+const getReposStatistics = (repos) => {
   const languages = repos.reduce((total, item) => {
     const { language, stargazers_count } = item;
 
@@ -53,7 +53,21 @@ const getMostPopularLanguages = (repos) => {
     })
     .slice(0, 5);
 
-  return { mostUsedLanguages, mostPopularLanguages };
+  let { stars, forks } = repos.reduce(
+    (total, item) => {
+      const { stargazers_count, name, forks } = item;
+      total.stars[stargazers_count] = { label: name, value: stargazers_count };
+      total.forks[forks] = { label: name, value: forks };
+
+      return total;
+    },
+    { stars: {}, forks: {} }
+  );
+
+  stars = Object.values(stars).slice(-3).reverse();
+  forks = Object.values(forks).slice(-3).reverse();
+
+  return { mostUsedLanguages, mostPopularLanguages, stars, forks };
 };
 
 const Wrapper = styled.div`
