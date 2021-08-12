@@ -9,6 +9,8 @@ const rootUrl = "https://api.github.com";
 const GithubContext = React.createContext();
 
 // Provider, Consumer - GithubContext.Provider
+// setLoading(true)
+// setLoading(true)
 
 const GithubProvider = ({ children }) => {
   const [githubUser, setGithubUser] = useState(mockUser);
@@ -16,13 +18,13 @@ const GithubProvider = ({ children }) => {
   const [followers, setFollowers] = useState(mockFollowers);
   // request loading
   const [requests, setRequests] = useState(0);
-  const [loading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // error
   const [error, setError] = useState({ show: false, msg: "" });
 
   const searchGithubUser = async (user) => {
     toggleError();
-    // setLoading(true)
+    setIsLoading(true);
     const response = await axios(`${rootUrl}/users/${user}`).catch((err) => {
       console.error(err);
     });
@@ -34,6 +36,8 @@ const GithubProvider = ({ children }) => {
     } else {
       toggleError(true, "there is no user with that username");
     }
+    checkRequests();
+    setIsLoading(false);
   };
   // check rate
   const checkRequests = () => {
@@ -67,6 +71,7 @@ const GithubProvider = ({ children }) => {
         requests,
         error,
         searchGithubUser,
+        isLoading,
       }}
     >
       {children}
